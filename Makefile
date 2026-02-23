@@ -22,8 +22,6 @@ BUILD_DATE="$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")"
 OSS_FILES := go.mod Dockerfile
 GOLANG_VERSION="1.23.12"
 
-
-
 STAGING_REGISTRY ?= gcr.io/k8s-staging-cloud-provider-ibm
 REGISTRY ?= $(STAGING_REGISTRY)
 RELEASE_TAG ?= $(shell git describe --abbrev=0 2>/dev/null)
@@ -36,9 +34,6 @@ CORE_DRIVER_IMG ?= $(REGISTRY)/$(CORE_IMAGE_NAME)
 TAG ?= dev
 ARCH ?= amd64
 ALL_ARCH ?= amd64 ppc64le
-
-
-
 
 # Jenkins vars. Set to `unknown` if the variable is not yet defined
 BUILD_NUMBER?=unknown
@@ -77,7 +72,7 @@ lint: deps
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 GOOS=$(shell go env GOOS) GOARCH=$(shell go env GOARCH) go build -mod=vendor -a -ldflags '-X main.vendorVersion='"${DRIVER_NAME}-${GIT_COMMIT_SHA}"' -extldflags "-static"' -o ${GOPATH}/bin/${EXE_DRIVER_NAME} ./cmd/
+	CGO_ENABLED=0 GOOS=$(shell go env GOOS) GOARCH=$(shell go env GOARCH) go build -mod=vendor -a -ldflags '-X main.vendorVersion='"${DRIVER_NAME}-${GIT_COMMIT_SHA}"' -extldflags "-static"' -o bin/${EXE_DRIVER_NAME} ./cmd/
 
 .PHONY: verify
 verify: deps
@@ -135,7 +130,6 @@ docker-pull-prerequisites:
 	docker pull docker.io/docker/dockerfile:1.1-experimental
 	docker pull docker.io/library/golang:$(GOLANG_VERSION)
 	docker pull gcr.io/distroless/static:latest
-
 
 ## --------------------------------------
 ## Docker - All ARCH
